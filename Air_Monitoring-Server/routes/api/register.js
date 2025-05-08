@@ -15,20 +15,29 @@ const registerRouter = require("express").Router();
 // registerRouter.route("/air").post(postLiveAirQuality);
 registerRouter.route("/air").post(async (req, res) => {
   console.log("reqreq", req.body);
-  const { pm25, pm10, temperature, time, humidity, co2_ppm, aqi_status } =
-    req.body;
-
-  // console.log("res.json", res.body);
-
-  const result = await Air.create({
+  const {
     pm25,
+    mac_address,
     pm10,
     temperature,
     time,
     humidity,
     co2_ppm,
     aqi_status,
-    utc: new Date()?.toString(),
+  } = req.body;
+
+  // console.log("res.json", res.body);
+
+  const result = await Air.create({
+    pm25,
+    pm10,
+    mac_address,
+    temperature,
+    time,
+    humidity,
+    co2_ppm,
+    aqi_status,
+    utc: new Date(),
   });
 
   console.log("db res", result);

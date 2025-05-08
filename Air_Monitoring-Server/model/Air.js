@@ -6,6 +6,10 @@ const airSchema = new Schema({
     type: String,
     required: false,
   },
+  mac_address: {
+    type: String,
+    required: false,
+  },
   lon: {
     type: String,
     required: false,
@@ -21,12 +25,12 @@ const airSchema = new Schema({
     type: Number,
     required: true,
   },
-  
+
   temperature: {
     type: Number,
     required: true,
   },
-  
+
   time: {
     type: String,
     required: true,
