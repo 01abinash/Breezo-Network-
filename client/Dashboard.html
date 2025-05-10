@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js">
+
+
+  </script>
+  <link rel="stylesheet" href="Dashboard.css">
+
+</head>
+<body>
+  <script>
+        fetch("http://173.255.230.190:3501/air/A4:CF:12:C5:A5:81").then(res => res.json()).then(async(data) => {
+          const pm25Breakpoints = [
+              { lower: 0.0, upper: 12.0, aqiLow: 0, aqiHigh: 50 },      // Good: 0-12 µg/m³ -> AQI 0-50
+              { lower: 12.1, upper: 35.4, aqiLow: 51, aqiHigh: 100 },   // Moderate: 12.1-35.4 µg/m³ -> AQI 51-100
+              { lower: 35.5, upper: 55.4, aqiLow: 101, aqiHigh: 150 },  // Unhealthy for Sensitive Groups: 35.5-55.4 µg/m³ -> AQI 101-150
+              { lower: 55.5, upper: 150.4, aqiLow: 151, aqiHigh: 200 }, // Unhealthy: 55.5-150.4 µg/m³ -> AQI 151-200
+              { lower: 150.5, upper: 250.4, aqiLow: 201, aqiHigh: 300 },// Very Unhealthy: 150.5-250.4 µg/m³ -> AQI 201-300
+              { lower: 250.5, upper: 500.4, aqiLow: 301, aqiHigh: 500 } // Hazardous: 250.5-500.4 µg/m³ -> AQI 301-500
+          ];
+          function calculateAQI(pm25Concentration) {
+              for (let i = 0; i < pm25Breakpoints.length; i++) {
+                  const { lower, upper, aqiLow, aqiHigh } = pm25Breakpoints[i];
+                  if (pm25Concentration >= lower && pm25Concentration <= upper) {
+                      // Apply the linear interpolation formula
+                      const aqi = ((aqiHigh - aqiLow) / (upper - lower)) * (pm25Concentration - lower) + aqiLow;
+                      return Math.round(aqi); // Round the result to the nearest integer
+                  }
+              }
+              return "Out of range"; // If PM2.5 concentration is out of expected range
+          }
+          // const aqiValue = calculateAQI(pm25Value);
+
+
+          const DataArr = data.data;
+          console.log("data",DataArr[0]);
+          const displayDiv = document.getElementById("data-display");
+
+        // Assuming data is an object — customize as needed
+        // displayDiv.innerHTML = `
+        //   <p><strong>Temperature:</strong> ${data.temperature} °C</p>
+        //   <p><strong>AQI:</strong> ${data.aqi}</p>
+        //   <p><strong>Humidity:</strong> ${data.humidity}%</p>
+        // `;
+
+        document.getElementById("pm25Value").textContent = DataArr[0].pm25;
+        document.getElementById("co2Value").textContent = DataArr[0]?.co2_ppm;
+        document.getElementById("tempValue").textContent = DataArr[0].temperature;
+        document.getElementById("humidityValue").textContent = DataArr[0].humidity;
+        document.getElementById("aqiValue").textContent = calculateAQI(DataArr[0].pm25);
+        document.getElementById("timeValue").textContent = new Date(DataArr[0].utc).toLocaleTimeString();
+        document.getElementById("cityValue").textContent = DataArr[0].city;
+
+
+    for (const el of DataArr) {
+      try {
+        console.log("ell ---", el)
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${el.pm25 ?? '--'}</td>
+          <td>${el.co2_ppm ?? '--'}</td>
+          <td>${el.temperature ?? '--'}</td>
+          <td>${el.humidity ?? '--'}</td>
+          <td>${calculateAQI(el.pm25) ?? '--'}</td>
+          <td>${new Date(el.utc).toLocaleTimeString() ?? '--'}</td>
+          <td>${el.city ?? '--'}</td>
+
+        `;
+
+        historyTableBody.appendChild(row);
+      } catch (err) {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td colspan="5">Error loading blob: ${id}</td>`;
+        historyTableBody.appendChild(row);
+      }
+    }
+
+        // document.getElementById("data-display").textContent = data.pm25;
+
+    })
+  </script>
+  <!-- Background Animation Elements -->
+  <div class="bg-animation">
+    <div class="wave"></div>
+    <div class="wave" style="animation-delay: -5s; bottom: -80px;"></div>
+    <div id="pulses"></div>
+  </div>
+
+  <div class="navbar">
+    <div class="nav-container">
+      <div class="empty-space"></div>
+      <div class="nav-links">
+        <a href="Dashboard.html" class="active">Dashboard</a>
+        <a href="tokens.html">Tokens</a>
+        <a href="map.html">Map</a>
+      </div>
+      <button class="connect-wallet-btn" id="connectWalletBtn">Connect to Wallet</button>
+    </div>
+  </div>
+
+  <h1>Todays AQI</h1>
+
+  <div class="grid">
+    <div class="chart-card">
+      <p>AQI</p>
+      <div id="aqiValue" class="value">--</div>
+      <p></p>
+    </div>
+    <div class="chart-card">
+      <p>PM2.5</p>
+      <div id="pm25Value" class="value">--</div>
+      <p>μg/m³</p>
+    </div>
+    <div class="chart-card">
+      <p>CO2</p>
+      <div id="co2Value" class="value">--</div>
+      <p>ppm</p>
+    </div>
+    <div class="chart-card">
+      <p>Temperature</p>
+      <div id="tempValue" class="value">--</div>
+      <p>°C</p>
+    </div>
+    <div class="chart-card">
+      <p>Humidity</p>
+      <div id="humidityValue" class="value">--</div>
+      <p>%</p>
+    </div>
+
+    <div class="chart-card">
+      <p>Last Record</p>
+      <div id="timeValue" class="value">--</div>
+      <p></p>
+    </div>
+    <div class="chart-card">
+      <p>Location</p>
+      <div id="cityValue" class="value">--</div>
+      <p></p>
+    </div>
+    
+  </div>
+
+  <!-- Historical AQI Data Table -->
+   <div class="history-section">
+    <h2 style="margin-top: 40px;">📊 Historical AQI Data</h2>
+    <table id="history-table" class="history-table">
+      <thead>
+        <tr>
+          <th>AQI</th>
+          <th>PM2.5</th>
+          <th>CO2 (ppm)</th>
+          <th>Temperature (°C)</th>
+          <th>Humidity (%)</th>
+          <th>Time</th>
+          <th>Location</th>1
+
+
+        </tr>
+      </thead>
+  <tbody id="historyTableBody">
+
+
+  </tbody>
+</table>
+</div>
+
+
+  <script>
+    // Create pulse effects
+    function createPulses() {
+      const pulsesContainer = document.getElementById('pulses');
+      const numberOfPulses = 3;
+      
+      for(let i = 0; i < numberOfPulses; i++) {
+        const pulse = document.createElement('div');
+        pulse.classList.add('pulse');
+        
+        // Random positions
+        const posX = Math.random() * 100;
+        const posY = Math.random() * 100;
+        pulse.style.left = `${posX}%`;
+        pulse.style.top = `${posY}%`;
+        
+        // Random sizes
+        const size = Math.random() * 10 + 5;
+        pulse.style.width = `${size}px`;
+        pulse.style.height = `${size}px`;
+        
+        // Random start times
+        const delay = Math.random() * 4;
+        pulse.style.animationDelay = `${delay}s`;
+        
+        pulsesContainer.appendChild(pulse);
+      }
+    }
+
+    // Fetch current AQI data
+
+    // Generate random data for a blob ID
+ 
+    // Fetch data for a single blob ID or generate fallback
+  // Call the function when page loads
+  // document.addEventListener('DOMContentLoaded', loadHistoricalData);
+
+    document.addEventListener("DOMContentLoaded", function() {
+      // Function to check if an element is in viewport
+      function isInViewport(element) {
+        const rect = element.getBoundingClientRect();
+        return (
+          rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.8 &&
+          rect.bottom >= 0
+        );
+      }
+
+      // Create pulses
+      createPulses();
+      
+      // Get all chart cards
+      const chartCards = document.querySelectorAll('.chart-card');
+      
+      // Function to handle scroll events
+      function handleScroll() {
+        // Check for mobile view
+        const isMobile = window.innerWidth <= 768;
+        
+        chartCards.forEach((card, index) => {
+          if (isInViewport(card)) {
+            // On mobile, just use zoom animation
+            if (isMobile) {
+              card.classList.add('zoom-in-animation');
+            } else {
+              // On desktop, alternate slide animations
+              if (index % 2 === 0) {
+                card.classList.add('slide-in-right');
+              } else {
+                card.classList.add('slide-in-left');
+              }
+            }
+          }
+        });
+      }
+      
+      // Initial check when page loads
+      handleScroll();
+      
+      // Add scroll event listener
+      window.addEventListener('scroll', handleScroll);
+      
+      // Also check on window resize
+      window.addEventListener('resize', handleScroll);
+
+      // Start animation sequence for values
+      setTimeout(startValueAnimations, 2000);
+      
+      function startValueAnimations() {
+        const values = document.querySelectorAll('.value');
+        let currentIndex = 0;
+        
+        // Function to animate a single value
+        function animateValue() {
+          // Remove bounce class from all values
+          values.forEach(value => value.classList.remove('bounce'));
+          
+          // Add bounce class to current value
+          values[currentIndex].classList.add('bounce');
+          
+          // Move to the next value
+          currentIndex = (currentIndex + 1) % values.length;
+          
+          // Schedule the next animation
+          setTimeout(animateValue, 1500);
+        }
+        
+        // Start the animation sequence after data is loaded
+        animateValue();
+      }
+
+      // Connect Sui wallet button functionality
+      const connectWalletBtn = document.getElementById('connectWalletBtn');
+
+      // Function to check if wallet is installed
+      function isSuiWalletInstalled() {
+        return Boolean(window.suiWallet || window.sui);
+      }
+
+      // Function to get the wallet provider
+      function getWalletProvider() {
+        if (window.suiWallet) return window.suiWallet;
+        if (window.sui) return window.sui;
+        return null;
+      }
+
+      // Wait for the wallet to be available
+      document.addEventListener('DOMContentLoaded', () => {
+        // Check if the wallet is already injected
+        if (isSuiWalletInstalled()) {
+          console.log("Sui wallet detected on page load");
+        } else {
+          console.log("Waiting for Sui wallet to be injected...");
+          
+          // Set up a listener for wallet injection
+          window.addEventListener('load', () => {
+            // Check again after window load
+            setTimeout(() => {
+              if (isSuiWalletInstalled()) {
+                console.log("Sui wallet detected after timeout");
+              } else {
+                console.log("Sui wallet not detected after timeout");
+              }
+            }, 1000); // Give it a second after load
+          });
+        }
+      });
+
+      connectWalletBtn.addEventListener('click', async function() {
+        try {
+          // Check if wallet is installed
+          if (!isSuiWalletInstalled()) {
+            alert("Sui Wallet not detected. Please install the Sui Wallet extension.");
+            return;
+          }
+
+          connectWalletBtn.textContent = "Connecting...";
+          
+          const walletProvider = getWalletProvider();
+          let account;
+          
+          if (walletProvider === window.suiWallet) {
+            // Standard Sui wallet
+            await walletProvider.requestPermissions();
+            const accounts = await walletProvider.getAccounts();
+            
+            if (accounts && accounts.length > 0) {
+              account = accounts[0];
+            } else {
+              throw new Error("No accounts found");
+            }
+          } else if (walletProvider === window.sui) {
+            // Alternative Sui wallet
+            const response = await walletProvider.connect();
+            if (response.status === "success") {
+              account = response.account;
+            } else {
+              throw new Error("Failed to connect");
+            }
+          }
+          
+          if (account) {
+            const shortAddress = account.substring(0, 6) + '...' + account.substring(account.length - 4);
+            connectWalletBtn.textContent = shortAddress;
+            console.log("Connected to Sui wallet:", account);
+          }
+        } catch (error) {
+          console.error("Error connecting wallet:", error);
+          connectWalletBtn.textContent = "Connect to Wallet";
+          alert("Failed to connect wallet: " + error.message);
+        }
+      });
+
+    });
+  </script>
+</body>
+</html>
