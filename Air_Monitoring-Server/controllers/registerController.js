@@ -12,40 +12,91 @@ const options = {
 function getRandomDeviceId() {
   return Math.random().toString(36).substring(2, 20).toUpperCase();
 }
-const postLiveAirQuality = async (req, res) => {
-  try {
-    console.log("asdjf");
-    const { lat, lon, utc, pm2, deviceId } = req.body;
-    const geocoder = NodeGeocoder(options);
-    console.log("asdf ----", lat, lon);
-    const geoRes = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=en`
-    );
-    console.log("geores");
-    const geoResJson = await geoRes.json();
-    const result = await Air.findOneAndUpdate(
-      { lat, lon },
-      {
-        utc,
-        city: geoResJson.address.city,
-        city_district: geoResJson.address.city_district,
-        pm2,
-        country: geoResJson.address.country,
-        deviceId: deviceId,
-      },
-      { upsert: true, new: true }
-    );
+// const postLiveAirQuality = async (req, res) => {
+//   try {
+//     console.log("asdjf");
+//     const { lat, lon, utc, pm2, deviceId } = req.body;
+//     const geocoder = NodeGeocoder(options);
+//     console.log("asdf ----", lat, lon);
+//     const geoRes = await fetch(
+//       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=en`
+//     );
+//     console.log("geores");
+//     const geoResJson = await geoRes.json();
+//     const result = await Air.findOneAndUpdate(
+//       { lat, lon },
+//       {
+//         utc,
+//         city: geoResJson.address.city,
+//         city_district: geoResJson.address.city_district,
+//         pm2,
+//         country: geoResJson.address.country,
+//         deviceId: deviceId,
+//       },
+//       { upsert: true, new: true }
+//     );
 
-    return res.json({ success: true, message: "hello world", data: result });
+//     return res.json({ success: true, message: "hello world", data: result });
+//   } catch (err) {
+//     console.error("err", err);
+//     return res.json({
+//       success: false,
+//       message: "hello world",
+//       data: err?.message,
+//     });
+//   }
+// };
+const postLiveAirQuality = async (req, res) => {
+  console.log("reqreq", req.body);
+  const {
+    pm25,
+    mac_address,
+    pm10,
+    temperature,
+    time,
+    humidity,
+    co2_ppm,
+    aqi_status,
+    city,
+  } = req.body;
+
+  const result = await Air.create({
+    pm25,
+    pm10,
+    mac_address,
+    temperature,
+    time,
+    city,
+    humidity,
+    co2_ppm,
+    aqi_status,
+    utc: new Date(),
+  });
+
+  console.log("db res", result);
+
+  return res.json({ success: true, message: "hit", data: req.body });
+};
+
+const getAqiWithMac = async (req, res) => {
+  try {
+    const { mac_address } = req.params;
+
+    const result = await Air.find({ mac_address }).sort({ utc: -1 });
+
+    console.log("result", result);
+
+    return res.json({ success: true, message: "hit", data: result });
   } catch (err) {
     console.error("err", err);
     return res.json({
       success: false,
-      message: "hello world",
-      data: err?.message,
+      message: "Something went wrong",
+      data: err,
     });
   }
 };
+
 const getUserData = async (req, res) => {
   try {
     console.log("asdjf", req.params.userId);
@@ -282,4 +333,5 @@ module.exports = {
   putDevicesInUsers,
   getUniqueDistrictInformation,
   getUserData,
+  getAqiWithMac,
 };
