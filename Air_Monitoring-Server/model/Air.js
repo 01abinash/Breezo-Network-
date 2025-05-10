@@ -35,6 +35,11 @@ const airSchema = new Schema({
     type: String,
     required: true,
   },
+
+  co2_ppm: {
+    type: Number,
+    required: true,
+  },
   humidity: {
     type: Number,
     required: true,
