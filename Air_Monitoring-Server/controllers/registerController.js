@@ -82,7 +82,7 @@ const getAqiWithMac = async (req, res) => {
   try {
     const { mac_address } = req.params;
 
-    const result = await Air.find({ mac_address }).sort({ utc: -1 });
+    const result = await Air.find({ mac_address }).sort({ utc: -1 }).limit(60);
 
     console.log("result", result);
 
