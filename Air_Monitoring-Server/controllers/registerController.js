@@ -1,4 +1,6 @@
 const User = require("../model/User");
+const Device = require("../model/Device");
+
 const Air = require("../model/Air");
 
 const NodeGeocoder = require("node-geocoder");
@@ -47,7 +49,9 @@ function getRandomDeviceId() {
 //   }
 // };
 const postLiveAirQuality = async (req, res) => {
-  console.log("reqreq", req.body);
+  const userId = req.userInfo.id || req.userInfo._id;
+
+  // console.log("reqreq", req.body);
   const {
     pm25,
     mac_address,
@@ -60,22 +64,47 @@ const postLiveAirQuality = async (req, res) => {
     city,
   } = req.body;
 
-  const result = await Air.create({
-    pm25,
-    pm10,
-    mac_address,
-    temperature,
-    time,
-    city,
-    humidity,
-    co2_ppm,
-    aqi_status,
-    utc: new Date(),
-  });
+  try {
+    // if (userId) {
+    //   const user = await User.findById(userId);
+    //   console.log("user", user);
+    //   if (!user) return res.status(404).json({ message: "User not found" });
+    //   user.points = user.points + 1;
+    //   await user.save();
+    // }
+    const device = await Device.findOne({ mac_address });
+    const user = await User.findById(device.owned_by);
+    user.points = user.points + 1;
+    await user.save();
 
-  console.log("db res", result);
+    const result = await Air.create({
+      pm25,
+      pm10,
+      mac_address,
+      temperature,
+      time,
+      city,
+      humidity,
+      co2_ppm,
+      aqi_status,
+      utc: new Date(),
+    });
 
-  return res.json({ success: true, message: "hit", data: req.body });
+    console.log("db res", result);
+
+    return res.json({
+      success: true,
+      message: "Successfully inserted Air data",
+      data: req.body,
+    });
+  } catch (err) {
+    console.log("err in postliveairquality", err);
+    return res.json({
+      success: false,
+      message: "Something went wrong",
+      data: err,
+    });
+  }
 };
 
 const getAqiWithMac = async (req, res) => {
@@ -99,11 +128,52 @@ const getAqiWithMac = async (req, res) => {
 
 const getUserData = async (req, res) => {
   try {
-    console.log("asdjf", req.params.userId);
+    const userId = req.userInfo.id || req.userInfo._id;
+
+    // console.log("asdjf", req.params.userId);
     const user = await User.findById(req.params.userId);
     console.log("user", user);
 
     return res.json({ success: true, message: "User Data", data: user });
+  } catch (err) {
+    console.error("err", err);
+    return res.json({
+      success: false,
+      message: "hello world",
+      data: err?.message,
+    });
+  }
+};
+
+const getDevicesOfUser = async (req, res) => {
+  try {
+    const userId = req.userInfo.id || req.userInfo._id;
+
+    console.log("user Id", req.userInfo.id);
+
+    const devices = await Device.find({ owned_by: userId });
+
+    console.log("devices --- ", devices);
+
+    // let devicesWithLocation = [];
+
+    // devices.forEach(async (device) => {
+    //   let latestAir = await Air.findOne({
+    //     mac_address: device.mac_address,
+    //   });
+
+    //   devicesWithLocation.push({
+    //     ...device,
+    //     location: latestAir?.city || "N/A",
+    //   });
+    // });
+    // console.log("devicesWithLocation --- ", devicesWithLocation);
+
+    return res.json({
+      success: true,
+      message: "Successfully found devices.",
+      data: devices,
+    });
   } catch (err) {
     console.error("err", err);
     return res.json({
@@ -134,25 +204,78 @@ const getAllAirData = async (req, res) => {
 
 const putDevicesInUsers = async (req, res) => {
   try {
-    const { userId } = req.params;
-    // const result = await Air.find().exec();
+    const userId = req.userInfo._id || req.userInfo.id;
+    console.log("req.userInfo", req.userInfo);
+
+    const { sensorId } = req.body;
 
     const user = await User.findById(userId);
+
     console.log("userId", user);
+
     if (!user) return res.status(404).json({ message: "User not found" });
-    user.device_ids = req.body;
-    const result = await user.save();
+
+    const device = await Device.findOneAndUpdate(
+      { mac_address: sensorId },
+      {
+        owned_by: userId,
+      },
+      { new: true }
+    );
+
+    console.log("device 1231 1231", device);
+
+    // device.owned_by = userId;
+    // const result = await device.save();
 
     return res.json({
       success: true,
-      message: "Successfully retrieved all air quality data",
+      message: "Successfully assigned device.",
+      data: device,
+    });
+  } catch (err) {
+    console.error("err", err);
+
+    return res.json({
+      success: false,
+      message: "Something went wrong when assiging device.",
+      data: err,
+    });
+  }
+};
+const insertDevice = async (req, res) => {
+  const { deviceId } = req.body;
+  console.log("deviceId", deviceId);
+
+  try {
+    const device = await Device.find({ mac_address: deviceId });
+    console.log("device ", device);
+
+    if (device?.length && device.length > 0) {
+      return res.json({
+        success: false,
+        message: "Device with the ID already exists",
+        data: null,
+      });
+    }
+
+    const result = await Device.create({
+      mac_address: deviceId,
+      registered_at: new Date(),
+    });
+    console.log("result", result);
+
+    return res.json({
+      success: true,
+      message: "Successfully inserted device.",
       data: result,
     });
   } catch (err) {
     console.error("err", err);
+
     return res.json({
       success: false,
-      message: "Something went wrong",
+      message: "Something went wrong when inserting device.",
       data: err,
     });
   }
@@ -330,8 +453,10 @@ module.exports = {
   getAverageFromCityDistrict,
   getAllAirData,
   echoIot,
+  getDevicesOfUser,
   putDevicesInUsers,
   getUniqueDistrictInformation,
   getUserData,
   getAqiWithMac,
+  insertDevice,
 };

@@ -10,10 +10,16 @@ const deviceSchema = new Schema({
   registered_at: {
     type: Date,
     required: true,
+    default: Date.now,
   },
   owned_by: {
     type: Schema.Types.ObjectId,
     ref: "User",
+    required: false,
+    default: null,
+  },
+  total_transmissions: {
+    type: Number,
     required: false,
     default: null,
   },

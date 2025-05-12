@@ -11,6 +11,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+
   device_ids: [{ type: String, required: false }],
   points: {
     type: Number,

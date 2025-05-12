@@ -21,7 +21,7 @@ const handle = async (req, res) => {
   try {
     const user = await Users.find({ email: id }).exec();
 
-    await Users.findOneAndUpdate({ email: id }, { ...user, device_ids:  });
+    await Users.findOneAndUpdate({ email: id }, { ...user, device_ids });
 
     return res.status(200).json(allUsers);
   } catch (err) {
