@@ -42,7 +42,7 @@ export default function SignUpPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold">Air</h1>
+          <h1 className="text-2xl font-bold">Breezo</h1>
           <p className="text-gray-500 mt-2">Sign Up to monitor your devices</p>
         </div>
 

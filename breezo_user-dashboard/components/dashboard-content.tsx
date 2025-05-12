@@ -1,4 +1,5 @@
 "use client";
+
 import WelcomeBanner from "@/components/welcome-banner";
 import EarningsSection from "@/components/earnings-section";
 import EarningsChart from "@/components/earnings-chart";
@@ -7,12 +8,13 @@ import ConnectionStatus from "@/components/connection-status";
 import { useEffect, useState } from "react";
 import { Axios } from "@/services/Axios";
 import Cookies from "js-cookie";
+import { decryptJwtPayload } from "@/utils/getJwtBody";
 
 export default function DashboardContent() {
   const cookie = Cookies.get("token");
   // @ts-ignore
-  const decodeJwt = atob(cookie?.split(".")[1]);
-  const userId = JSON.parse(decodeJwt)?.UserInfo?.id;
+  const decodeJwt = decryptJwtPayload(cookie);
+  const userId = decodeJwt?.UserInfo?.id;
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
@@ -35,8 +37,8 @@ export default function DashboardContent() {
           <ConnectionStatus />
         </div>
       </div>
-      <EarningsChart />
       <NetworksSection />
+      <EarningsChart />
     </div>
   );
 }

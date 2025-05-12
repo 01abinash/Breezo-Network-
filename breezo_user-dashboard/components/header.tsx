@@ -1,4 +1,5 @@
 "use client";
+
 import Cookies from "js-cookie";
 
 import { Switch } from "@/components/ui/switch";
@@ -6,13 +7,15 @@ import { Button } from "@/components/ui/button";
 import { Share2, Users } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useTheme } from "next-themes";
+import { decryptJwtPayload } from "@/utils/getJwtBody";
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
   const cookie = Cookies.get("token");
-  // @ts-ignore
-  const decodeJwt = atob(cookie?.split(".")[1]);
-  const email = JSON.parse(decodeJwt)?.UserInfo?.email;
+
+  const decodeJwt = decryptJwtPayload(cookie);
+  console.log("decodeJwt", decodeJwt);
+  const email = decodeJwt?.UserInfo?.email;
   // console.log("cookie", JSON.parse(decodeJwt).UserInfo.email);
 
   return (

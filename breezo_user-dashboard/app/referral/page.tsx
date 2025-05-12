@@ -8,7 +8,7 @@ export default function ReferralPage() {
           Referral Program <span className="text-gray-400">(Coming Soon)</span>
         </h1>
         <p className="text-gray-600 mb-6">
-          Invite friends to join Air and earn rewards when they connect their
+          Invite friends to join Breezo and earn rewards when they connect their
           devices.
         </p>
 

@@ -7,8 +7,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Air Dashboard",
-  description: "Track your earnings and network connections",
+  title: "Breezo",
+  description: "Track your earnings and sensor connections",
 };
 
 export default function RootLayout({

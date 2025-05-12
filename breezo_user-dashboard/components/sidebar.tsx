@@ -17,7 +17,7 @@ export default function Sidebar() {
     <div className="w-[220px] bg-white border-r flex flex-col ">
       <div className="p-4 border-b">
         <Link href="/" className="flex items-center gap-2">
-          <span className="font-bold text-xl">Air</span>
+          <span className="font-bold text-xl">Breezo</span>
         </Link>
       </div>
 

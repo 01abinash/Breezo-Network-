@@ -13,7 +13,7 @@ export default function ConnectionStatus() {
       <p className="text-sm mb-4">Your devices are connected.</p>
 
       <div className="flex items-center justify-between bg-gray-100 rounded-lg p-2">
-        <div className="text-sm">Device Type: Air Desktop App</div>
+        <div className="text-sm">Device Type: Breezo Desktop App</div>
         <div className="bg-green-500 text-white px-2 py-0.5 rounded text-xs">
           2.00x
         </div>
