@@ -49,8 +49,6 @@ function getRandomDeviceId() {
 //   }
 // };
 const postLiveAirQuality = async (req, res) => {
-  const userId = req.userInfo.id || req.userInfo._id;
-
   // console.log("reqreq", req.body);
   const {
     pm25,

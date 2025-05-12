@@ -6,5 +6,6 @@ const {
 const unprotectedRoute = require("express").Router();
 
 unprotectedRoute.route("/insert-device").post(insertDevice);
+registerRouter.route("/air").post(postLiveAirQuality);
 
 module.exports = unprotectedRoute;
