@@ -1,5 +1,6 @@
 const {
   getAqiWithMac,
+  postLiveAirQuality,
   insertDevice,
 } = require("../../controllers/registerController");
 
