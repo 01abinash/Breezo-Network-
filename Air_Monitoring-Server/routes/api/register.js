@@ -15,7 +15,7 @@ const Air = require("../../model/Air");
 const registerRouter = require("express").Router();
 
 // registerRouter.route("/air").post(postLiveAirQuality);
-registerRouter.route("/air/:mac_address").get(getAqiWithMac);
+// registerRouter.route("/air/:mac_address").get(getAqiWithMac);
 
 // registerRouter.route("/air").get(getAllAirData);
 // registerRouter.route("/update-user-devices/:userId").put(putDevicesInUsers);
