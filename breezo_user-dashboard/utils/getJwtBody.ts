@@ -1,3 +1,5 @@
+"use client";
+
 export function decryptJwtPayload(token: string | undefined) {
   if (!token) return {};
 

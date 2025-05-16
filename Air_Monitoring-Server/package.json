@@ -10,6 +10,10 @@
   "author": "samip",
   "license": "ISC",
   "dependencies": {
+    "@solana/spl-token": "^0.4.13",
+    "@solana/web3.js": "^1.98.2",
+    "@streamflow/common": "^8.0.1",
+    "@streamflow/stream": "^8.0.1",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",

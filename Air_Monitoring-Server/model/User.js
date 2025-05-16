@@ -11,7 +11,10 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-
+  wallet_address: {
+    type: String,
+    required: false,
+  },
   device_ids: [{ type: String, required: false }],
   points: {
     type: Number,

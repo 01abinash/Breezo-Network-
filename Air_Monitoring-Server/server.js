@@ -41,6 +41,7 @@ app.use(require("./routes/api/unprotected"));
 
 app.use(verifyJWT);
 
+app.use(require("./routes/api/users"));
 app.use(require("./routes/api/register"));
 app.use(require("./routes/api/sensor"));
 

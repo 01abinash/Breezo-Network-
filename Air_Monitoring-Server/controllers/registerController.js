@@ -2,8 +2,9 @@ const User = require("../model/User");
 const Device = require("../model/Device");
 
 const Air = require("../model/Air");
-
 const NodeGeocoder = require("node-geocoder");
+// import { transfer, getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
+const { Keypair } = require("@solana/web3.js");
 
 const bcrypt = require("bcrypt");
 const allRoles = require("../config/roles_list");
@@ -11,43 +12,15 @@ const allRoles = require("../config/roles_list");
 const options = {
   provider: "openstreetmap",
 };
+
+const mint_owner_keypair = Keypair.fromSecretKey(
+  Uint8Array.from(process.env.MINT_OWNER.split(","))
+);
+
 function getRandomDeviceId() {
   return Math.random().toString(36).substring(2, 20).toUpperCase();
 }
-// const postLiveAirQuality = async (req, res) => {
-//   try {
-//     console.log("asdjf");
-//     const { lat, lon, utc, pm2, deviceId } = req.body;
-//     const geocoder = NodeGeocoder(options);
-//     console.log("asdf ----", lat, lon);
-//     const geoRes = await fetch(
-//       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=en`
-//     );
-//     console.log("geores");
-//     const geoResJson = await geoRes.json();
-//     const result = await Air.findOneAndUpdate(
-//       { lat, lon },
-//       {
-//         utc,
-//         city: geoResJson.address.city,
-//         city_district: geoResJson.address.city_district,
-//         pm2,
-//         country: geoResJson.address.country,
-//         deviceId: deviceId,
-//       },
-//       { upsert: true, new: true }
-//     );
 
-//     return res.json({ success: true, message: "hello world", data: result });
-//   } catch (err) {
-//     console.error("err", err);
-//     return res.json({
-//       success: false,
-//       message: "hello world",
-//       data: err?.message,
-//     });
-//   }
-// };
 const postLiveAirQuality = async (req, res) => {
   // console.log("reqreq", req.body);
   const {
@@ -241,6 +214,7 @@ const putDevicesInUsers = async (req, res) => {
     });
   }
 };
+
 const insertDevice = async (req, res) => {
   const { deviceId } = req.body;
   console.log("deviceId", deviceId);
@@ -445,7 +419,65 @@ const handleNewCompany = async (req, res) => {
   }
 };
 
+const getEarningStatistics = async (req, res) => {
+  console.log("req.body getEarningStatistics", req.body);
+
+  try {
+    const { points } = req.body;
+
+    console.log("points", points);
+
+    const user = await User.findById(req.userInfo.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const ownedSensors = await Device.find({ owned_by: user._id });
+    const ownedSensorsArr = ownedSensors.map((sensor) => sensor.mac_address);
+
+    console.log("ownedSensorsArr", ownedSensorsArr);
+
+    const airDataVol = await Air.aggregate([
+      {
+        $match: {
+          mac_address: {
+            $in: ownedSensorsArr,
+          },
+        },
+      },
+      {
+        $match: {
+          mac_address: { $in: ownedSensorsArr },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$utc" },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ]);
+
+    return res.json({
+      success: true,
+      message: "Successfully earned points",
+      data: airDataVol,
+    });
+  } catch (err) {
+    console.error("err", err);
+    return res.json({
+      success: false,
+      message: "Something went wrong",
+      data: err,
+    });
+  }
+};
+
 module.exports = {
+  getEarningStatistics,
   handleNewCompany,
   postLiveAirQuality,
   getAverageFromCityDistrict,

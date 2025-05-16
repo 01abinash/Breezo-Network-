@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { Axios } from "@/services/Axios";
 import Cookies from "js-cookie";
 import { decryptJwtPayload } from "@/utils/getJwtBody";
+import { MINT_ADDRESS } from "@/utils/getSolanaBody";
 
 export default function DashboardContent() {
   const cookie = Cookies.get("token");
@@ -16,6 +17,7 @@ export default function DashboardContent() {
   const decodeJwt = decryptJwtPayload(cookie);
   const userId = decodeJwt?.UserInfo?.id;
   const [userData, setUserData] = useState({});
+  const [tokenAccounts, setTokenAccounts] = useState([]);
 
   useEffect(() => {
     // console.log("hello");
@@ -24,7 +26,6 @@ export default function DashboardContent() {
       // console.log("pending referrals", res.data);
     });
   }, []);
-  console.log("userData", userData);
 
   return (
     <div className="space-y-6">

@@ -1,4 +1,5 @@
 "use client";
+import { AiOutlineEye } from "react-icons/ai";
 
 import { Button } from "@/components/ui/button";
 import { WifiOff, Edit2, DollarSign, WifiIcon } from "lucide-react";
@@ -30,7 +31,7 @@ export default function NetworksSection() {
   const decodeJwt = decryptJwtPayload(cookie);
 
   const userId = decodeJwt?.UserInfo?.id;
-  console.log("userId", userId);
+  console.log("userId", decodeJwt);
 
   useEffect(() => {
     (async function () {
@@ -71,39 +72,10 @@ export default function NetworksSection() {
                 {/* <th className="py-2 px-4 text-left font-medium">
                   Device Connectivity Rate
                 </th> */}
-                <th className="py-2 px-4 text-left font-medium">Action</th>
+                <th className="py-2 px-4 text-left font-medium">Action</th>1
               </tr>
             </thead>
             <tbody>
-              {/* {devices?.map((device) => {
-                return (
-                  <>
-                    <tr className="border-t">
-                      <td className="py-3 px-4">
-                        <WifiIcon className="h-4 w-4 text-red-500" />
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="flex items-center">
-                          <span>{device}</span>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-red-500">43.231.210.77</td>
-                      <td className="py-3 px-4">0 day, 21 hrs, 39 mins</td>
-                      <td className="py-3 px-4">75%</td>
-                      <td className="py-3 px-4">
-                        <div className="flex items-center justify-between bg-gray-100 rounded-lg px-3 py-1">
-                          <div className="flex items-center">
-                            <div className="bg-green-500 rounded-full w-4 h-4 flex items-center justify-center text-white mr-1">
-                              <DollarSign className="h-3 w-3" />
-                            </div>
-                            <span>N/A</span>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  </>
-                );
-              })} */}
               {devices &&
                 devices?.map((device: any) => {
                   return (
@@ -115,7 +87,14 @@ export default function NetworksSection() {
                           {device?.total_transmissions || 0}
                         </td>
                         {/* <td>{device?.mac_address}</td> */}
-                        <td>
+                        <td className="flex gap-2">
+                          <div className="w-10 cursor-pointer h-10 bg-blue-500 rounded flex items-center justify-center">
+                            <AiOutlineEye
+                              strokeWidth={20}
+                              size={30}
+                              color="white"
+                            />
+                          </div>
                           <div className="w-10 cursor-pointer h-10 bg-red-500 rounded flex items-center justify-center">
                             <MdDeleteOutline size={30} color="white" />
                           </div>

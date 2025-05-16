@@ -20,6 +20,7 @@ const handleLogin = async (req, res) => {
   //evaluate password
   // console.log("pass", password, "fUpass:", foundUser.password);
   const match = await bcrypt.compare(password, foundUser.password);
+
   if (match) {
     // create and send JWT
     // console.log("asdf", process.env.ACCESS_TOKEN_SECRET, foundUser.username);
@@ -29,7 +30,8 @@ const handleLogin = async (req, res) => {
         UserInfo: {
           id: foundUser._id,
           username: foundUser.username,
-          email: email,
+          email: foundUser.email,
+          wallet_address: foundUser.wallet_address,
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
