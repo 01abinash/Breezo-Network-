@@ -203,13 +203,15 @@ h1 {
 
 .grid {
   display: flex;
-  flex-direction: row;
-  gap: 1rem;
+  /* flex-direction: row; */
+  gap: 70px;
   padding: 1rem 2rem;
   max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 10;
+  /* margin: 0 auto; */
+  /* position: relative; */
+  /* z-index: 10; */
+  margin-left: 2px;
+  /* margin-right: -2px; */
 }
 
 .chart-card {
