@@ -1,0 +1,189 @@
+#include <DHT.h>
+#include <SoftwareSerial.h>
+#include <SdsDustSensor.h>
+#include <ESP8266WiFi.h>
+#include <time.h>
+#include <ESP8266HTTPClient.h>
+#include <WiFiClientSecure.h>
+
+// Server URL
+const char* LOCALHOST = "http://173.255.230.190:3501";
+const char* LOCATION = "Kritipur, Kathmandu";
+
+
+// WiFi Configuration
+const char* ssid = "juxtapose";
+const char* password = "CLB271050B";
+
+// DHT22 Setup
+#define DHTPIN D4
+#define DHTTYPE DHT22
+DHT dht(DHTPIN, DHTTYPE);
+
+// MQ135 for CO2
+#define MQ135_PIN A0
+
+// SDS011 Setup
+SoftwareSerial sdsSerial(D5, D6); // RX, TX
+SdsDustSensor sds(sdsSerial);
+
+// Indicators
+#define RED_LED D2
+#define BUZZER D7
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+
+  pinMode(RED_LED, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+  digitalWrite(BUZZER, LOW);
+
+  // Connect to WiFi
+  WiFi.begin(ssid, password);
+  Serial.print("Connecting to WiFi");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\n✅ WiFi connected");
+  digitalWrite(RED_LED, HIGH);
+
+  // NTP Time Sync
+  configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+  while (time(nullptr) < 100000) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\n⏱ NTP Time Synced");
+
+  // Start SDS011
+  sds.begin();
+  sds.wakeup();
+}
+
+void loop() {
+  // Get local time (Nepal = UTC +5:45)
+  time_t now = time(nullptr) + 20700;
+  struct tm* timeinfo = localtime(&now);
+  char timeStr[50];
+  strftime(timeStr, sizeof(timeStr), "%A, %Y-%m-%d %I:%M:%S %p", timeinfo);
+
+  // Sensor Readings
+  float temp = dht.readTemperature();
+  float hum = dht.readHumidity();
+  int mq135Value = analogRead(MQ135_PIN);
+  float co2_ppm = mq135Value * 10;
+
+  PmResult pm = sds.readPm();
+  if (pm.isOk()) {
+    int pm25 = pm.pm25;
+    int pm10 = pm.pm10;
+
+    int aqiLevel;
+    String aqiStatus = getHybridAQIStatus(co2_ppm, pm25, aqiLevel);
+    updateIndicators(aqiStatus);
+
+    // Location from MAC
+    String mac = WiFi.macAddress();
+
+    // Serial Monitor Output
+    Serial.println("==============================");
+    Serial.printf("📍 MAC Address    : %s\n", mac.c_str());
+    Serial.printf("🕒 Time           : %s\n", timeStr);
+    Serial.printf("🌡 Temperature     : %.2f °C\n", temp);
+    Serial.printf("💧 Humidity       : %.2f %%\n", hum);
+    Serial.printf("🧪 CO₂ Level      : %.2f ppm\n", co2_ppm);
+    Serial.printf("🌫 PM2.5           : %d µg/m³\n", pm25);
+    Serial.printf("🌪 PM10            : %d µg/m³\n", pm10);
+    Serial.printf("📍Device Location  : %s\n", LOCATION);
+    Serial.printf("📊 AQI Status  : %s (%d)\n", aqiStatus.c_str(), aqiLevel);
+    Serial.println("==============================\n");
+
+    // Create JSON Payload
+    // String payload = "{";
+String payload = "{";
+payload += "\"mac_address\": \"" + mac + "\",";
+payload += "\"time\": \"" + String(timeStr) + "\",";
+payload += "\"temperature\": " + String(temp) + ",";
+payload += "\"humidity\": " + String(hum) + ",";
+payload += "\"co2_ppm\": " + String(co2_ppm) + ",";
+payload += "\"pm25\": " + String(pm25) + ",";
+payload += "\"pm10\": " + String(pm10) + ",";
+payload += "\"aqi_status\": \"" + aqiStatus + "\",";
+payload += "\"aqi_level\": " + String(aqiLevel) + ",";
+payload += "\"city\": \"" + String(LOCATION) + "\"";
+payload += "}";
+
+    // Upload to Server
+    uploadToServer(payload);
+  }
+
+  delay(15000);
+}
+
+// Determine AQI Status and Level
+String getHybridAQIStatus(float co2_ppm, float pm25, int &level) {
+  int co2_level = (co2_ppm <= 1000) ? 1 :
+                  (co2_ppm <= 2000) ? 2 :
+                  (co2_ppm <= 5000) ? 3 :
+                  (co2_ppm <= 40000) ? 4 : 5;
+
+  int pm25_level = (pm25 <= 12.0) ? 1 :
+                   (pm25 <= 35.4) ? 2 :
+                   (pm25 <= 150.4) ? 3 :
+                   (pm25 <= 250.4) ? 4 : 5;
+
+  level = max(co2_level, pm25_level);
+
+  switch (level) {
+    case 1: return "Good 🌿";
+    case 2: return "Moderate 🌤";
+    case 3: return "Unhealthy 😷";
+    case 4: return "Very Unhealthy ☢";
+    case 5: return "Hazardous ☠";
+    default: return "Unknown";
+  }
+}
+
+// AQI Alerts via Buzzer
+void updateIndicators(String status) {
+  digitalWrite(BUZZER, LOW);
+
+  if (status == "Unhealthy 😷" || status == "Very Unhealthy ☢") {
+    tone(BUZZER, 30000); delay(500); noTone(BUZZER);
+  } else if (status == "Hazardous ☠") {
+    for (int i = 0; i < 3; i++) {
+      tone(BUZZER, 30000); delay(300); noTone(BUZZER); delay(200);
+    }
+  }
+}
+
+// Upload to Server
+void uploadToServer(String payload) {
+  if (WiFi.status() == WL_CONNECTED) {
+    WiFiClient client;
+    HTTPClient https;
+    String url = String(LOCALHOST) + "/air";
+    Serial.println("🌐 Uploading to server... on " + url);
+
+    if (https.begin(client, url)) {
+      https.addHeader("Content-Type", "application/json");
+      https.setTimeout(30000);
+
+      int httpCode = https.POST(payload);
+      if (httpCode > 0) {
+        Serial.println("✅ Server Response: ok ");
+        Serial.println(https.getString());  
+      } else {
+        Serial.print("❌ Upload failed: ");
+        Serial.println(https.errorToString(httpCode));
+      }
+      https.end();
+    } else {
+      Serial.println("❌ HTTPS begin failed");
+    }
+  } else {
+    Serial.println("❌ WiFi not connected!");
+  }
+}
