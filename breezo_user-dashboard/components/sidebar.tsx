@@ -37,12 +37,12 @@ export default function Sidebar() {
             label="Referral Program"
             commingSoon={true}
           />
-          <SidebarItem
+          {/* <SidebarItem
             href="/rewards"
             icon={<Gift className="h-5 w-5" />}
             label="Rewards"
             commingSoon={true}
-          />
+          /> */}
         </nav>
       </div>
 
