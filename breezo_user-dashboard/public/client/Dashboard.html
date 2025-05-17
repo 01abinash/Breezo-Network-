@@ -12,7 +12,7 @@
 </head>
 <body>
   <script>
-        fetch("http://173.255.230.190:3501/air/A4:CF:12:C5:A5:81").then(res => res.json()).then(async(data) => {
+        fetch("https://breezo-server.onrender.com/air/A4:CF:12:C5:A5:81").then(res => res.json()).then(async(data) => {
           const pm25Breakpoints = [
               { lower: 0.0, upper: 12.0, aqiLow: 0, aqiHigh: 50 },      // Good: 0-12 µg/m³ -> AQI 0-50
               { lower: 12.1, upper: 35.4, aqiLow: 51, aqiHigh: 100 },   // Moderate: 12.1-35.4 µg/m³ -> AQI 51-100
