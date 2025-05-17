@@ -82,7 +82,7 @@ export default function EarningsSection({ userData }: any) {
 
             <div className="flex items-center gap-2 mb-2">
               <div className="bg-green-500 rounded-full w-8 h-8 flex items-center justify-center text-white">
-                {/* <RiTailwindCssLine className="h-6 w-6" /> */}B
+                B
               </div>
               <div className="text-2xl font-bold">
                 {/* {Math.floor(userData.points / 10)} */}

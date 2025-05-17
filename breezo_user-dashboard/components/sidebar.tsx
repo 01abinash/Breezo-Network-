@@ -24,7 +24,7 @@ export default function Sidebar() {
       <div className="flex-1 py-4">
         <nav className="space-y-1">
           <SidebarItem
-            href="/"
+            href="/dashboard"
             icon={<LayoutGrid className="h-5 w-5" />}
             label="Dashboard"
             active

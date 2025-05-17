@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breezo Network - AQI Monitoring System</title>
+    <link rel="stylesheet" href="AirQuality.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    <div class="light-streaks">
+        <div class="streak"></div>
+        <div class="streak"></div>
+        <div class="streak"></div>
+        <div class="streak"></div>
+        <div class="streak"></div>
+    </div>
+    
+    <nav>
+        <div class="logo">Breezo Network</div>
+        <div class="nav-links">
+            <a href="Dashboard.html"> View AQI Data </a>
+        </div>
+    </nav>
+    
+    <div class="content">
+        <section class="hero">
+            <h1>Know The Air You Breathe</h1>
+            <p class="tagline">Breezo Network delivers real-time air quality monitoring through smart IoT integration, empowering communities with accurate and hyperlocal AQI insights.</p>
+            
+            <div class="buttons">
+                <a href="https://breezo.vercel.app/dashboard" class="btn btn-primary">Get started<span class="arrow-icon">→</span></a>
+            </div>
+        </section>
+        
+        <section id="features">
+            <h2 class="section-title">Core Features</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <!-- <div class="feature-icon">🌬️</div> -->
+                    <h3 class="feature-title">Real-time Monitoring</h3>
+                    <p class="feature-description"><i>Not just monitoring. We’re listening to the air.</i><br>Hyperlocal IoT sensors deliver second-by-second AQI insights, so you're always one step ahead of pollution.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <!-- <div class="feature-icon">🔗</div> -->
+                    <h3 class="feature-title">Tamper-proof Truth</h3>
+                    <p class="feature-description">Every data point is stored immutably <i>on-chain, no edits, no manipulation,</i> just clean, verified environmental data.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <!-- <div class="feature-icon">📊</div> -->
+                    <h3 class="feature-title">Know More. Act Smarter</h3>
+                    <p class="feature-description"><i>Data that drives decisions.</i><br>Powerful dashboards and trends help communities, activists, and governments take meaningful action backed by real evidence.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="project-roadmap">
+        <div class="Procontainer">
+            <h1>Project Journey</h1>
+            
+            <div class="timeline">
+                <div class="timeline-line"></div>
+                
+                <!-- Milestone 1 -->
+                <div class="milestone milestone-1">
+                    <div class="milestone-line milestone-line-left"></div>
+                    <div class="milestone-circle">1</div>
+                    
+                    <div class="phase-box phase-left">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h2>Phase 1</h2>
+                                <p>Researching Nepal’s air quality issues, defining project goals, selecting IoT sensors and tech stack, and designing initial wireframes.</p>
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="iot.jpg" alt="Project Planning Image">
+                                <!-- <h2>Planning Phase</h2>
+                                <p>Setting the foundation for project success</p> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Milestone 2 -->
+                <div class="milestone milestone-2">
+                    <div class="milestone-circle">2</div>
+                    <div class="milestone-line milestone-line-right"></div>
+                    
+                    <div class="phase-box phase-right">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h2>Phase 2</h2>
+                                <p>Developing and assembling IoT devices, integrating sensors, building the backend infrastructure, and creating the real-time dashboard.</p>
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="iot2.jpg" alt="Design Phase Image">
+                                <!-- <h2>Design Phase</h2>
+                                <p>Bringing ideas to life with visual concepts</p> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Milestone 3 -->
+                <div class="milestone milestone-3">
+                    <div class="milestone-line milestone-line-left"></div>
+                    <div class="milestone-circle">3</div>
+                    
+                    <div class="phase-box phase-left">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h2>Phase 3</h2>
+                                <p>Field testing devices in multiple locations, calibrating sensors for accuracy, launching the live dashboard, and preparing for community deployment and token integration.</p>
+                            </div>
+                            <div class="flip-card-back">
+                                <img src="iot3.jpg" alt="Development Image">
+                                <!-- <h2>Development Phase</h2>
+                                <p>Building the functionality that powers your project</p> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+<div class="animain">
+    <h2 class="section-title">The Breezo Network Token</h2>
+    <div class="animation-container">
+                <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Background Circles -->
+                  <circle cx="250" cy="250" r="170" fill="#F1F8E9" opacity="0.5"></circle>
+                  <circle cx="250" cy="250" r="120" fill="#E8F5E9" opacity="0.7"></circle>
+                  
+                  <!-- Air Waves -->
+                  <circle class="air-wave" cx="250" cy="250" r="190" id="wave1"></circle>
+                  <circle class="air-wave" cx="250" cy="250" r="220" id="wave2"></circle>
+                  <circle class="air-wave" cx="250" cy="250" r="250" id="wave3"></circle>
+                  
+                  <!-- Data Particles -->
+                  <g id="particles">
+                    <circle class="data-particle" cx="250" cy="100" r="6" id="particle1"></circle>
+                    <circle class="data-particle" cx="150" cy="170" r="5" id="particle2"></circle>
+                    <circle class="data-particle" cx="350" cy="170" r="4" id="particle3"></circle>
+                    <circle class="data-particle" cx="120" cy="280" r="5" id="particle4"></circle>
+                    <circle class="data-particle" cx="380" cy="280" r="4" id="particle5"></circle>
+                    <circle class="data-particle" cx="200" cy="350" r="6" id="particle6"></circle>
+                    <circle class="data-particle" cx="300" cy="350" r="5" id="particle7"></circle>
+                  </g>
+                  
+                  <!-- Token -->
+                  <g class="token-container" id="token">
+                    <circle class="breez-token" cx="250" cy="250" r="80"></circle>
+                    <circle class="token-border" cx="250" cy="250" r="80"></circle>
+                    <text class="token-letter" x="250" y="250">B</text>
+                  </g>
+                </svg>
+                
+                <!-- <div class="stats">
+                  <div class="stat">
+                    <div class="stat-value" id="node-count">247</div>
+                    <div class="stat-label">Nodes</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value" id="aqi-value">68</div>
+                    <div class="stat-label">Avg. AQI</div>
+                  </div>
+                  <div class="stat">
+                    <div class="stat-value" id="token-price">$0.42</div>
+                    <div class="stat-label">BREEZ Price</div>
+                  </div>
+                </div> -->
+            </div>
+        </div>
+        </div>
+
+        <section id="how-it-works" class="how-it-works">
+            <h2 class="section-title">How Users Earn Points</h2>
+            <div class="steps">
+                <div class="step" id="step1">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Hosting AQI Nodes</h3>
+                    <!-- <p class="step-description">IoT sensors collect real-time air quality data from multiple urban and rural locations.</p> -->
+                </div>
+                
+                <div class="step" id="step2">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Sharing Air Quality Data</h3>
+                    <!-- <p class="step-description">Data is encrypted and stored securely, creating a reliable record.</p> -->
+                </div>
+                
+                <div class="step" id="step3">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Referring New Users</h3>
+                    <!-- <p class="step-description">AI algorithms analyze patterns and predict air quality trends.</p> -->
+                </div>
+                
+                <div class="step" id="step4">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Reporting Polluted Zones</h3>
+                    <!-- <p class="step-description">Access insights through our user-friendly dashboard with customizable alerts.</p> -->
+                </div>
+            </div>
+            <h2 class="section-title">Points = Proof Of Contributions</h2>
+        </section>
+        
+       <section id="map-section">
+            <div class="map-container">
+                <h2 class="section-title">Air Quality Map</h2>
+                <div id="map"></div>
+            </div>
+        </section>
+        
+        <section id="contact" class="contact">
+            <!-- <div class="contact-container"></div>
+                <h2 class="section-title">Get in Touch</h2>
+                <p class="contact-intro">Interested in implementing our AQI monitoring system? Contact us today!</p>
+                
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" class="form-control" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+        </div> -->
+
+        <div class="precontainer">
+            <h2>Be the First to Know!</h2>
+            <p>Sign up for early access to our launch!</p>
+            
+            <input type="text" id="name" placeholder="Your Name" required />
+            <input type="email" id="email" placeholder="Your Email" required />
+            
+            <button onclick="submitWaitlist()">Join Waitlist</button>
+            
+            <p class="success-message" id="successMessage">🎉 Thank you! You're on the waitlist.</p>
+            
+            <a class="twitter-link" href="https://x.com/Breezo_Network" target="_blank">
+            Follow us on Twitter 
+            </a>
+        </div>
+        </section>
+    </div>
+    
+    <!-- <footer>
+    <div class="footer-links">
+        <a href="https://x.com/Breezo_Network" target="_blank" rel="noopener noreferrer">
+            <img src="image.png" alt="Twitter">
+            Breezo_Network
+        </a>
+    </div>
+    </footer> -->
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+  // Function to check if an element is in viewport
+  function isInViewport(element) {
+    const rect = element.getBoundingClientRect();
+    return (
+      rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.8 &&
+      rect.bottom >= 0
+    );
+  }
+
+
+  const keyFeatures = document.querySelectorAll('.key-feature');
+  
+  // Function to handle scroll events
+  function handleKeyFeatureScroll() {
+    // Check for mobile view
+    const isMobile = window.innerWidth <= 992;
+    
+    keyFeatures.forEach((feature, index) => {
+      if (isInViewport(feature)) {
+        // On mobile, just use zoom animation
+        if (isMobile) {
+          feature.classList.add('zoom-in-animation');
+        } else {
+          // On desktop, alternate slide animations
+          if (index % 2 === 0) {
+            feature.classList.add('slide-in-right');
+          } else {
+            feature.classList.add('slide-in-left');
+          }
+        }
+      }
+    });
+  }
+  
+  // Initial check when page loads
+  handleKeyFeatureScroll();
+  
+  // Add scroll event listener
+  window.addEventListener('scroll', handleKeyFeatureScroll);
+  
+  // Also check on window resize
+  window.addEventListener('resize', handleKeyFeatureScroll);
+
+  
+  // Get all process elements and arrows
+  const processes = document.querySelectorAll('.process');
+  const arrows = document.querySelectorAll('.arrow');
+  
+  // Get all elements you want to animate on scroll
+  const animateElements = document.querySelectorAll('.feature-card, .key-feature, .step, .aqi-card, .contact-form');
+  
+  // Function to handle scroll events
+  function handleScroll() {
+    // Check each process element
+    processes.forEach(process => {
+      if (isInViewport(process)) {
+        process.classList.add('visible');
+      }
+    });
+    
+    // Check each arrow element
+    arrows.forEach(arrow => {
+      if (isInViewport(arrow)) {
+        arrow.classList.add('visible');
+      }
+    });
+    
+    // Check each zoomable element
+    animateElements.forEach(element => {
+      if (isInViewport(element)) {
+        element.classList.add('zoom-in-animation');
+      }
+    });
+  }
+  
+  // Initial check when page loads
+  handleScroll();
+  
+  // Add scroll event listener
+  window.addEventListener('scroll', handleScroll);
+  
+  // Start the sequence animation for how-it-works section
+  setTimeout(startAnimations, 1000);
+  
+  function startAnimations() {
+    const stepNumbers = document.querySelectorAll('.step-number');
+    let currentIndex = 0;
+    
+    // Function to animate a single step
+    function animateStep() {
+      // Remove bounce class from all steps
+      stepNumbers.forEach(number => number.classList.remove('bounce'));
+      
+      // Add bounce class to current step
+      stepNumbers[currentIndex].classList.add('bounce');
+      
+      // Move to the next step
+      currentIndex = (currentIndex + 1) % stepNumbers.length;
+      
+      // Schedule the next animation
+      setTimeout(animateStep, 1500);
+    }
+    
+    // Start the animation sequence
+    animateStep();
+  }
+});
+
+// Initialize the map
+    var map = L.map('map').setView([27.7172, 85.3240], 12); // Coordinates for Kathmandu, change as needed
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Example marker with AQI popup
+    L.marker([27.68705030989457, 85.28325967116415]).addTo(map)
+        .bindPopup('<b>Station 1</b><br>PM2.5: 42<br>CO2: 415<br>AQI: 78')
+        .openPopup();
+
+    L.marker([27.673792037170447, 85.32479151795556]).addTo(map)
+        .bindPopup('<b>Station 1</b><br>PM2.5: 42<br>CO2: 415<br>AQI: 78')
+        .openPopup();
+
+
+    // Token animation
+function animateToken() {
+  const token = document.getElementById('token');
+  const tokenBorder = document.querySelector('.token-border');
+  
+  // Animate token rotation
+  let rotation = 0;
+  setInterval(() => {
+    rotation += 0.2;
+    token.style.transform = `rotate(${rotation}deg)`;
+  }, 50);
+  
+  // Animate token border
+  tokenBorder.style.animation = 'dash 3s linear forwards';
+}
+
+// Air waves animation
+function animateWaves() {
+  const waves = document.querySelectorAll('.air-wave');
+  
+  waves.forEach((wave, index) => {
+    wave.style.animation = `wave ${4 + index}s linear infinite`;
+  });
+}
+
+// Data particles animation
+function animateParticles() {
+  const particles = document.querySelectorAll('.data-particle');
+  
+  particles.forEach((particle, index) => {
+    // Generate random movement paths
+    const x1 = (Math.random() - 0.5) * 40;
+    const y1 = (Math.random() - 0.5) * 40;
+    const x2 = (Math.random() - 0.5) * 40;
+    const y2 = (Math.random() - 0.5) * 40;
+    
+    particle.style.setProperty('--x1', `${x1}px`);
+    particle.style.setProperty('--y1', `${y1}px`);
+    particle.style.setProperty('--x2', `${x2}px`);
+    particle.style.setProperty('--y2', `${y2}px`);
+    
+    // Set different animation durations
+    const duration = 5 + index * 0.5;
+    particle.style.animation = `moveParticle ${duration}s ease-in-out infinite`;
+  });
+}
+
+// Stats animation
+function animateStats() {
+  // Node count animation
+  let nodeCount = 200;
+  const nodeTarget = 247;
+  const nodeElement = document.getElementById('node-count');
+  
+  if (nodeElement) {
+    const nodeInterval = setInterval(() => {
+      nodeCount += 1;
+      nodeElement.textContent = nodeCount;
+      
+      if (nodeCount >= nodeTarget) {
+        clearInterval(nodeInterval);
+      }
+    }, 30);
+  }
+  
+  // AQI value animation
+  let aqiValue = 50;
+  const aqiTarget = 68;
+  const aqiElement = document.getElementById('aqi-value');
+  
+  if (aqiElement) {
+    const aqiInterval = setInterval(() => {
+      aqiValue += 1;
+      aqiElement.textContent = aqiValue;
+      
+      if (aqiValue >= aqiTarget) {
+        clearInterval(aqiInterval);
+      }
+    }, 100);
+  }
+  
+  // Token price animation
+  let tokenPrice = 0.10;
+  const tokenTarget = 0.42;
+  const tokenElement = document.getElementById('token-price');
+  
+  if (tokenElement) {
+    const tokenInterval = setInterval(() => {
+      tokenPrice += 0.01;
+      tokenElement.textContent = `$${tokenPrice.toFixed(2)}`;
+      
+      if (tokenPrice >= tokenTarget) {
+        clearInterval(tokenInterval);
+        
+        // Add pulse animation after reaching the target
+        setInterval(() => {
+          tokenElement.style.animation = 'tokenValue 1s ease';
+          setTimeout(() => {
+            tokenElement.style.animation = '';
+          }, 1000);
+        }, 5000);
+      }
+    }, 80);
+  }
+}
+
+// Add CSS styles
+function addStyles() {
+  const style = document.createElement('style');
+  style.textContent = `
+    .air-wave {
+      fill: none;
+      stroke: #4CAF50;
+      stroke-width: 1;
+      stroke-dasharray: 10, 5;
+      opacity: 0.6;
+    }
+    
+    .data-particle {
+      fill: #2196F3;
+      opacity: 0.8;
+    }
+    
+    .breez-token {
+      fill: #81C784;
+    }
+    
+    .token-border {
+      fill: none;
+      stroke: #4CAF50;
+      stroke-width: 3;
+      stroke-dasharray: 503;
+      stroke-dashoffset: 503;
+    }
+    
+    .token-letter {
+      font-size: 80px;
+      font-weight: bold;
+      fill: #1B5E20;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+    
+    @keyframes dash {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.7; }
+    }
+    
+    @keyframes wave {
+      0% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: 100; }
+    }
+    
+    @keyframes moveParticle {
+      0% { transform: translate(0, 0); }
+      33% { transform: translate(var(--x1), var(--y1)); }
+      66% { transform: translate(var(--x2), var(--y2)); }
+      100% { transform: translate(0, 0); }
+    }
+    
+    @keyframes tokenValue {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+    
+    .stat {
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #2E7D32;
+    }
+    
+    .stat-label {
+      font-size: 14px;
+      color: #388E3C;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// Initialize all animations
+window.onload = () => {
+  addStyles();
+  animateToken();
+  animateWaves();
+  animateParticles();
+  animateStats();
+};
+
+//form
+function submitWaitlist() {
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const successMessage = document.getElementById("successMessage");
+
+      if (!name || !email) {
+        alert("Please fill in both name and email.");
+        return;
+      }
+
+      fetch("YOUR_SCRIPT_URL", {
+        method: "POST",
+        body: JSON.stringify({ name, email }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(res => {
+        if (res.ok) {
+          document.getElementById("name").value = "";
+          document.getElementById("email").value = "";
+          successMessage.style.display = "block";
+        } else {
+          alert("Something went wrong. Please try again later.");
+        }
+      })
+      .catch(() => {
+        alert("Failed to submit. Check your internet connection or script URL.");
+      });
+    }
+    </script>
+</body>
+</html>
