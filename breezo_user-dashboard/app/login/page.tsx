@@ -52,22 +52,24 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Email:adsrb15@gmail.com</Label>
               <Input
                 onChange={(e) => setUser({ ...user, email: e.target.value })}
                 id="email"
                 type="email"
+                defaultValue={"adsrb15@gmail.com"}
                 placeholder="name@example.com"
               />
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Password:adsrb15</Label>
               </div>
               <Input
                 id="password"
                 onChange={(e) => setUser({ ...user, password: e.target.value })}
                 type="password"
+                defaultValue={"adsrb15"}
                 placeholder="••••••••"
               />
             </div>
