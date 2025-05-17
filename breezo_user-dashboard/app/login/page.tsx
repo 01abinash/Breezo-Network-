@@ -17,7 +17,11 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const [user, setUser] = useState({ email: "", password: "" });
+  const [user, setUser] = useState({
+    email: "adsrb15@gmail.com",
+    password: "adsrb15",
+  });
+
   const navigate = useRouter();
   const handleSubmit = async (e: any) => {
     e?.preventDefault();
