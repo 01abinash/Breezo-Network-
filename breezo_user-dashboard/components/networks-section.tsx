@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { Axios } from "@/services/Axios";
 import Cookies from "js-cookie";
 import { decryptJwtPayload } from "@/utils/getJwtBody";
+import Link from "next/link";
 export default function NetworksSection() {
   const [open, setOpen] = useState(false);
   const [deviceId, setDeviceId] = useState("");
@@ -88,13 +89,16 @@ export default function NetworksSection() {
                         </td>
                         {/* <td>{device?.mac_address}</td> */}
                         <td className="flex gap-2">
-                          <div className="w-10 cursor-pointer h-10 bg-blue-500 rounded flex items-center justify-center">
+                          <Link
+                            href={`/aqi/${device.mac_address}`}
+                            className="w-10 cursor-pointer h-10 bg-blue-500 rounded flex items-center justify-center"
+                          >
                             <AiOutlineEye
                               strokeWidth={20}
                               size={30}
                               color="white"
                             />
-                          </div>
+                          </Link>
                           <div className="w-10 cursor-pointer h-10 bg-red-500 rounded flex items-center justify-center">
                             <MdDeleteOutline size={30} color="white" />
                           </div>

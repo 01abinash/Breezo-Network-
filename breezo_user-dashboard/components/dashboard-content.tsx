@@ -10,6 +10,7 @@ import { Axios } from "@/services/Axios";
 import Cookies from "js-cookie";
 import { decryptJwtPayload } from "@/utils/getJwtBody";
 import { MINT_ADDRESS } from "@/utils/getSolanaBody";
+import DashboardLayout from "./dashboard-layout";
 
 export default function DashboardContent() {
   const cookie = Cookies.get("token");
